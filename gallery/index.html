@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gallery — FreshVegStore</title>
+<meta name="description" content="A look at our produce, stall and deliveries.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  .tile{
+    aspect-ratio:4/3; border-radius:var(--radius-m); display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:8px; color:#fff; text-align:center; padding:16px;
+    border:1px solid var(--line);
+  }
+  .tile span.emoji{ font-size:2.4rem; }
+  .tile span.label{ font-family:'Fraunces',serif; font-size:1rem; }
+  .t1{ background:linear-gradient(135deg,#2d7a4f,#1f5c3f); }
+  .t2{ background:linear-gradient(135deg,#e8845a,#c0603a); }
+  .t3{ background:linear-gradient(135deg,#d9a441,#b9852c); }
+  .t4{ background:linear-gradient(135deg,#1f5c3f,#123423); }
+  .t5{ background:linear-gradient(135deg,#6b7770,#3f4842); }
+  .t6{ background:linear-gradient(135deg,#2d7a4f,#3f9668); }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap nav-row">
+    <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="FreshVegStore logo"></a>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰ Menu</button>
+    <ul class="nav-links">
+      <li><a href="../about/index.html">About</a></li>
+      <li><a href="../products/index.html">Products</a></li>
+      <li><a href="../services/index.html">Services</a></li>
+      <li><a href="../clients/index.html">Clients</a></li>
+      <li><a href="../gallery/index.html" aria-current="page">Gallery</a></li>
+      <li><a href="../contact/index.html">Contact</a></li>
+      <li><a href="../billing/index.html">Billing</a></li>
+      <li><a class="nav-cta" href="../bulk-order/index.html">Bulk Order</a></li>
+    </ul>
+  </div>
+</header>
+
+<section class="hero" style="padding:48px 0;">
+  <div class="wrap">
+    <span class="badge">A look around</span>
+    <h1>The stall, the crates, the delivery run.</h1>
+    <p class="muted" style="max-width:60ch;">
+      These are placeholder tiles — drop your own stall, produce and delivery photos into
+      <code>assets/images/</code> and swap the tiles below for <code>&lt;img&gt;</code> tags.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap grid grid-3">
+    <div class="tile t1"><span class="emoji">🥬</span><span class="label">Fresh greens, sorted daily</span></div>
+    <div class="tile t2"><span class="emoji">🍅</span><span class="label">Today's tomato crate</span></div>
+    <div class="tile t3"><span class="emoji">🧅</span><span class="label">Onions &amp; garlic stock</span></div>
+    <div class="tile t4"><span class="emoji">🏪</span><span class="label">The FreshVegStore stall</span></div>
+    <div class="tile t5"><span class="emoji">🚚</span><span class="label">Bulk delivery in progress</span></div>
+    <div class="tile t6"><span class="emoji">🥦</span><span class="label">Seasonal broccoli &amp; cauliflower</span></div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand"><img src="../assets/logo.svg" alt="FreshVegStore" style="height:34px; filter:brightness(0) invert(1);"></div>
+        <p style="color:#c7cec9; font-size:.88rem; max-width:32ch;">Farm-fresh vegetables for homes and institutions, supplied daily from VPO Asron.</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="../about/index.html">About</a></li>
+          <li><a href="../products/index.html">Products</a></li>
+          <li><a href="../services/index.html">Services</a></li>
+          <li><a href="../gallery/index.html">Gallery</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Business</h4>
+        <ul>
+          <li><a href="../billing/index.html">Billing / POS</a></li>
+          <li><a href="../bulk-order/index.html">Bulk Order</a></li>
+          <li><a href="../clients/index.html">Clients</a></li>
+          <li><a href="../contact/index.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li>VPO Asron, Near SBI Bank</li>
+          <li>Punjab – 144533</li>
+          <li>+91 98159 37394</li>
+          <li>orders@freshvegstore.in</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span data-year></span> FreshVegStore, VPO Asron. All rights reserved.</span>
+      <span>GSTIN: 03ABCFF1234K1Z5 (demo)</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — FreshVegStore</title>
+<meta name="description" content="Get in touch with FreshVegStore, VPO Asron, Punjab.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap nav-row">
+    <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="FreshVegStore logo"></a>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰ Menu</button>
+    <ul class="nav-links">
+      <li><a href="../about/index.html">About</a></li>
+      <li><a href="../products/index.html">Products</a></li>
+      <li><a href="../services/index.html">Services</a></li>
+      <li><a href="../clients/index.html">Clients</a></li>
+      <li><a href="../gallery/index.html">Gallery</a></li>
+      <li><a href="../contact/index.html" aria-current="page">Contact</a></li>
+      <li><a href="../billing/index.html">Billing</a></li>
+      <li><a class="nav-cta" href="../bulk-order/index.html">Bulk Order</a></li>
+    </ul>
+  </div>
+</header>
+
+<section class="hero" style="padding:48px 0;">
+  <div class="wrap">
+    <span class="badge">We're easy to find</span>
+    <h1>Visit the stall, or reach out first.</h1>
+  </div>
+</section>
+
+<section>
+  <div class="wrap grid grid-2" style="align-items:flex-start;">
+    <div>
+      <div class="card" style="margin-bottom:20px;">
+        <h3>Address</h3>
+        <p class="muted">VPO Asron, Near SBI Bank<br>Distt. Shahid Bhagat Singh Nagar, Punjab – 144533</p>
+      </div>
+      <div class="card" style="margin-bottom:20px;">
+        <h3>Phone &amp; Email</h3>
+        <p class="muted">+91 98159 37394<br>orders@freshvegstore.in</p>
+      </div>
+      <div class="card">
+        <h3>Hours</h3>
+        <p class="muted">Open daily, 6:00 AM – 8:30 PM<br>Closed on major festivals</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Send an enquiry</h3>
+      <p class="muted" style="font-size:.88rem;">For bulk supply requirements, use the <a href="../bulk-order/index.html" style="color:var(--green-deep); font-weight:600;">Bulk Order</a> form instead — it goes straight to a quote.</p>
+      <form id="enquiry-form">
+        <div class="field-row">
+          <div class="field"><label>Name</label><input type="text" required></div>
+          <div class="field"><label>Phone</label><input type="tel" required></div>
+        </div>
+        <div class="field"><label>Message</label><textarea placeholder="What do you need?" required></textarea></div>
+        <button class="btn btn-primary" type="submit">Send Enquiry</button>
+        <p id="enquiry-msg" class="muted" style="margin-top:10px; font-size:.85rem;"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand"><img src="../assets/logo.svg" alt="FreshVegStore" style="height:34px; filter:brightness(0) invert(1);"></div>
+        <p style="color:#c7cec9; font-size:.88rem; max-width:32ch;">Farm-fresh vegetables for homes and institutions, supplied daily from VPO Asron.</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="../about/index.html">About</a></li>
+          <li><a href="../products/index.html">Products</a></li>
+          <li><a href="../services/index.html">Services</a></li>
+          <li><a href="../gallery/index.html">Gallery</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Business</h4>
+        <ul>
+          <li><a href="../billing/index.html">Billing / POS</a></li>
+          <li><a href="../bulk-order/index.html">Bulk Order</a></li>
+          <li><a href="../clients/index.html">Clients</a></li>
+          <li><a href="../contact/index.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li>VPO Asron, Near SBI Bank</li>
+          <li>Punjab – 144533</li>
+          <li>+91 98159 37394</li>
+          <li>orders@freshvegstore.in</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span data-year></span> FreshVegStore, VPO Asron. All rights reserved.</span>
+      <span>GSTIN: 03ABCFF1234K1Z5 (demo)</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/app.js"></script>
+<script>
+  document.getElementById('enquiry-form').addEventListener('submit', e => {
+    e.preventDefault();
+    document.getElementById('enquiry-msg').textContent =
+      "Thanks — this demo form doesn't send yet. Connect it to a form service (e.g. Formspree) or call +91 98159 37394 directly.";
+    e.target.reset();
+  });
+</script>
+</body>
+</html>

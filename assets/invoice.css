@@ -1,0 +1,72 @@
+/* =========================================================
+   FreshVegStore — A4 Invoice stylesheet
+   Shared by /billing (A4 option) and /bulk-order
+   ========================================================= */
+
+.inv-page{
+  width:210mm; min-height:297mm; margin:0 auto; background:#fff;
+  padding:14mm 14mm 16mm; font-family:'Inter',Arial,sans-serif; color:#1c231f;
+  box-shadow:0 0 0 1px #e5e0d5;
+}
+.inv-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:16px; border-bottom:3px solid #1f5c3f; padding-bottom:14px; }
+.inv-brand{ display:flex; gap:12px; align-items:center; }
+.inv-brand img{ height:52px; width:auto; }
+.inv-brand h1{ font-family:'Fraunces',Georgia,serif; font-size:1.5rem; margin:0; color:#1f5c3f; }
+.inv-brand p{ margin:2px 0 0; font-size:.78rem; color:#6b7770; }
+.inv-meta{ text-align:right; }
+.inv-meta .doctitle{ font-family:'Fraunces',Georgia,serif; font-size:1.4rem; color:#e8845a; letter-spacing:.02em; }
+.inv-meta table{ margin-left:auto; border-collapse:collapse; font-size:.82rem; margin-top:6px; }
+.inv-meta td{ padding:2px 0 2px 14px; text-align:right; }
+.inv-meta td.k{ color:#6b7770; padding-left:0; }
+
+.inv-parties{ display:flex; justify-content:space-between; gap:24px; margin-top:18px; }
+.inv-box{ flex:1; }
+.inv-box h4{ font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:#e8845a; margin:0 0 6px; }
+.inv-box .name{ font-weight:700; font-size:.98rem; }
+.inv-box .line{ font-size:.85rem; color:#3a4740; margin-top:2px; }
+.inv-box .line.muted{ color:#6b7770; }
+
+.inv-table{ width:100%; border-collapse:collapse; margin-top:22px; font-size:.86rem; }
+.inv-table thead th{
+  background:#1f5c3f; color:#fff; text-align:left; padding:9px 10px; font-weight:600; font-size:.78rem;
+}
+.inv-table thead th.num, .inv-table td.num{ text-align:right; }
+.inv-table tbody td{ padding:9px 10px; border-bottom:1px solid #e5e0d5; vertical-align:top; }
+.inv-table tbody tr:nth-child(even){ background:#f7f9f6; }
+
+.inv-totals{ display:flex; justify-content:flex-end; margin-top:14px; }
+.inv-totals table{ border-collapse:collapse; width:280px; font-size:.88rem; }
+.inv-totals td{ padding:5px 4px; }
+.inv-totals td.k{ color:#6b7770; }
+.inv-totals td.v{ text-align:right; font-weight:600; }
+.inv-totals tr.grand td{ border-top:2px solid #1f5c3f; font-size:1.05rem; padding-top:9px; color:#1f5c3f; }
+
+.inv-words{ margin-top:10px; font-size:.82rem; }
+.inv-words .k{ color:#6b7770; }
+
+.inv-bottom{ display:flex; justify-content:space-between; gap:24px; margin-top:34px; align-items:flex-end; }
+.inv-terms{ font-size:.76rem; color:#6b7770; max-width:60%; }
+.inv-terms h4{ font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; color:#1f5c3f; margin:0 0 6px; }
+.inv-sign{ text-align:center; }
+.inv-sign .box{ border-top:1px solid #1c231f; padding-top:6px; font-size:.8rem; width:180px; }
+
+.inv-footer-strip{
+  margin-top:26px; background:#eaf5ee; border-radius:8px; padding:10px 14px;
+  display:flex; justify-content:space-between; font-size:.76rem; color:#1f5c3f; flex-wrap:wrap; gap:6px;
+}
+
+.inv-actions{ max-width:210mm; margin:18px auto 0; display:flex; gap:10px; justify-content:flex-end; }
+
+@media print{
+  body *{ visibility:hidden; }
+  .inv-actions{ display:none; }
+  .inv-page, .inv-page *{ visibility:visible; }
+  .inv-page{ position:absolute; top:0; left:0; box-shadow:none; margin:0; }
+  @page{ size:A4; margin:0; }
+}
+@media (max-width:900px){
+  .inv-page{ width:100%; padding:6mm; }
+  .inv-top, .inv-parties, .inv-bottom{ flex-direction:column; }
+  .inv-meta{ text-align:left; }
+  .inv-meta table{ margin-left:0; }
+}

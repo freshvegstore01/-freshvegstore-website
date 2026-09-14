@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Products &amp; Rates — FreshVegStore</title>
+<meta name="description" content="Full vegetable catalogue and indicative daily rates from FreshVegStore, VPO Asron.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap nav-row">
+    <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="FreshVegStore logo"></a>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰ Menu</button>
+    <ul class="nav-links">
+      <li><a href="../about/index.html">About</a></li>
+      <li><a href="../products/index.html" aria-current="page">Products</a></li>
+      <li><a href="../services/index.html">Services</a></li>
+      <li><a href="../clients/index.html">Clients</a></li>
+      <li><a href="../gallery/index.html">Gallery</a></li>
+      <li><a href="../contact/index.html">Contact</a></li>
+      <li><a href="../billing/index.html">Billing</a></li>
+      <li><a class="nav-cta" href="../bulk-order/index.html">Bulk Order</a></li>
+    </ul>
+  </div>
+</header>
+
+<section class="hero" style="padding:48px 0;">
+  <div class="wrap">
+    <span class="badge">Updated daily at the stall</span>
+    <h1>Today's produce, priced for both retail and bulk.</h1>
+    <p class="muted" style="max-width:60ch; font-size:1.05rem;">
+      Rates below are indicative retail rates for planning — the exact rate of the day is confirmed at
+      billing, since mandi prices move daily. Bulk buyers get a fixed rate agreed for the supply period;
+      request a quote from the <a href="../bulk-order/index.html" style="color:var(--green-deep); font-weight:600;">bulk order desk</a>.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow-note">Roots &amp; staples</span>
+      <h2>Everyday vegetables</h2>
+    </div>
+    <div class="grid grid-4" id="staples"></div>
+  </div>
+</section>
+
+<section style="background:var(--paper-dim);">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow-note">Leafy</span>
+      <h2>Greens &amp; saag</h2>
+    </div>
+    <div class="grid grid-4" id="greens"></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow-note">Seasonal</span>
+      <h2>Seasonal vegetables</h2>
+    </div>
+    <div class="grid grid-4" id="seasonal"></div>
+  </div>
+</section>
+
+<section style="background:var(--paper-dim);">
+  <div class="wrap strip">
+    <div>
+      <h2>Ordering for a kitchen, not a home?</h2>
+      <p>Factories, canteens, schools and colleges can set up a standing bulk order with a fixed rate and A4 invoice.</p>
+    </div>
+    <a class="btn btn-clay" href="../bulk-order/index.html">Go to Bulk Order →</a>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand"><img src="../assets/logo.svg" alt="FreshVegStore" style="height:34px; filter:brightness(0) invert(1);"></div>
+        <p style="color:#c7cec9; font-size:.88rem; max-width:32ch;">Farm-fresh vegetables for homes and institutions, supplied daily from VPO Asron.</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="../about/index.html">About</a></li>
+          <li><a href="../products/index.html">Products</a></li>
+          <li><a href="../services/index.html">Services</a></li>
+          <li><a href="../gallery/index.html">Gallery</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Business</h4>
+        <ul>
+          <li><a href="../billing/index.html">Billing / POS</a></li>
+          <li><a href="../bulk-order/index.html">Bulk Order</a></li>
+          <li><a href="../clients/index.html">Clients</a></li>
+          <li><a href="../contact/index.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li>VPO Asron, Near SBI Bank</li>
+          <li>Punjab – 144533</li>
+          <li>+91 98159 37394</li>
+          <li>orders@freshvegstore.in</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span data-year></span> FreshVegStore, VPO Asron. All rights reserved.</span>
+      <span>GSTIN: 03ABCFF1234K1Z5 (demo)</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/app.js"></script>
+<script>
+  const STAPLES = [
+    ["Potatoes","kg",25], ["Onions","kg",30], ["Tomatoes","kg",30],
+    ["Garlic","kg",150], ["Ginger","kg",120], ["Carrots","kg",40]
+  ];
+  const GREENS = [
+    ["Spinach / Saag","kg",20], ["Coriander","bunch",10], ["Mint","bunch",10],
+    ["Fenugreek / Methi","kg",25], ["Mustard Greens","kg",22], ["Lettuce","kg",50]
+  ];
+  const SEASONAL = [
+    ["Cauliflower","kg",30], ["Cabbage","kg",20], ["Green Peas","kg",60],
+    ["Bitter Gourd","kg",40], ["Broccoli","kg",80], ["Capsicum","kg",50],
+    ["Cucumber","kg",25], ["Bottle Gourd","kg",25]
+  ];
+  function fill(id, items){
+    const el = document.getElementById(id);
+    el.innerHTML = items.map(([name,unit,rate]) => `
+      <div class="produce-card">
+        <div class="tag">per ${unit}</div>
+        <div class="name">${name}</div>
+        <div class="rate">₹${rate}/${unit}</div>
+      </div>`).join('');
+  }
+  fill('staples', STAPLES);
+  fill('greens', GREENS);
+  fill('seasonal', SEASONAL);
+</script>
+</body>
+</html>

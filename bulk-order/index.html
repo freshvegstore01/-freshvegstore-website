@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bulk Order — FreshVegStore</title>
+<meta name="description" content="Place a bulk vegetable order for your factory, canteen, school or college and get an A4 GST invoice from FreshVegStore.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/invoice.css">
+<style>
+  .bo-wrap{ max-width:980px; margin:0 auto; padding:30px 24px 60px; }
+  .item-row{
+    display:grid; grid-template-columns:1.6fr .8fr .8fr .8fr auto; gap:10px; align-items:end; margin-bottom:10px;
+  }
+  @media (max-width:720px){ .item-row{ grid-template-columns:1fr 1fr; } }
+  .item-row .field{ margin-bottom:0; }
+  .item-row .amt{ font-weight:700; color:var(--green-deep); font-size:.9rem; padding-bottom:11px; text-align:right; min-width:70px; }
+  .item-row button.rm-item{ background:none; border:none; color:#c0503a; font-size:18px; cursor:pointer; padding-bottom:8px; }
+  #add-item{ background:var(--green-light); color:var(--green-deep); border:1px dashed var(--green); border-radius:8px; padding:9px 16px; font-weight:600; font-size:.85rem; cursor:pointer; }
+
+  .bo-totals{ margin-top:6px; border-top:1px solid var(--line); padding-top:12px; }
+  .bo-totals .row{ display:flex; justify-content:space-between; padding:4px 0; font-size:.92rem; }
+  .bo-totals .row.grand{ font-size:1.15rem; font-weight:700; color:var(--green-deep); border-top:1px solid var(--line); margin-top:6px; padding-top:10px; }
+
+  #invoice-overlay{ display:none; position:fixed; inset:0; background:rgba(20,28,22,.55); align-items:flex-start; justify-content:center; z-index:200; padding:24px; overflow:auto; }
+  #invoice-overlay.show{ display:flex; }
+
+  table.recent{ width:100%; border-collapse:collapse; font-size:.86rem; }
+  table.recent th{ text-align:left; background:var(--green-light); color:var(--green-deep); padding:8px 10px; font-size:.74rem; text-transform:uppercase; letter-spacing:.04em; }
+  table.recent td{ padding:8px 10px; border-bottom:1px solid var(--line); }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap nav-row">
+    <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="FreshVegStore logo"></a>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰ Menu</button>
+    <ul class="nav-links">
+      <li><a href="../about/index.html">About</a></li>
+      <li><a href="../products/index.html">Products</a></li>
+      <li><a href="../services/index.html">Services</a></li>
+      <li><a href="../clients/index.html">Clients</a></li>
+      <li><a href="../gallery/index.html">Gallery</a></li>
+      <li><a href="../contact/index.html">Contact</a></li>
+      <li><a href="../billing/index.html">Billing</a></li>
+      <li><a class="nav-cta" href="../bulk-order/index.html" aria-current="page">Bulk Order</a></li>
+    </ul>
+  </div>
+</header>
+
+<section class="hero" style="padding:44px 0;">
+  <div class="wrap">
+    <span class="badge">For factories, canteens, schools &amp; colleges</span>
+    <h1>Set up a bulk vegetable order.</h1>
+    <p class="muted" style="max-width:60ch;">
+      Fill in your organisation's details and the items you need. Submitting generates a proper
+      A4 GST invoice you can print or save as a PDF for your accounts team, and saves your
+      organisation to our client list for future orders.
+    </p>
+  </div>
+</section>
+
+<div class="bo-wrap">
+  <section class="panel card" style="padding:28px;">
+    <h3 style="margin-bottom:18px;">Organisation Details</h3>
+    <div class="field-row">
+      <div class="field">
+        <label>Organisation Type</label>
+        <select id="org-type">
+          <option value="Factory">Factory</option>
+          <option value="Canteen">Canteen</option>
+          <option value="School">School</option>
+          <option value="College">College</option>
+          <option value="Other">Other Institution</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Organisation Name</label>
+        <input id="org-name" type="text" placeholder="e.g. Suman Textiles Ltd." required>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Contact Person</label>
+        <input id="org-contact" type="text" placeholder="Name of the person ordering">
+      </div>
+      <div class="field">
+        <label>Phone Number</label>
+        <input id="org-phone" type="tel" placeholder="10-digit mobile number" required>
+      </div>
+    </div>
+    <div class="field">
+      <label>Delivery Address</label>
+      <textarea id="org-address" placeholder="Full delivery address" required></textarea>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Organisation GSTIN (optional)</label>
+        <input id="org-gstin" type="text" placeholder="e.g. 03XXXXX1234X1ZX">
+      </div>
+      <div class="field">
+        <label>Required Delivery Date</label>
+        <input id="org-date" type="date">
+      </div>
+    </div>
+
+    <h3 style="margin:24px 0 14px;">Order Items</h3>
+    <div id="items-list"></div>
+    <button type="button" id="add-item">+ Add another item</button>
+
+    <div class="bo-totals">
+      <div class="row"><span>Subtotal</span><span id="bo-subtotal">₹0.00</span></div>
+      <div class="row"><span>CGST (2.5%)</span><span id="bo-cgst">₹0.00</span></div>
+      <div class="row"><span>SGST (2.5%)</span><span id="bo-sgst">₹0.00</span></div>
+      <div class="row grand"><span>Estimated Total</span><span id="bo-grand">₹0.00</span></div>
+    </div>
+
+    <div class="field" style="margin-top:16px;">
+      <label>Notes (optional)</label>
+      <textarea id="org-notes" placeholder="Delivery timing, packing instructions, standing order frequency, etc."></textarea>
+    </div>
+
+    <button type="button" id="generate-invoice" class="btn btn-primary" style="width:100%; justify-content:center; margin-top:8px;">Generate A4 Invoice</button>
+    <p class="muted" style="font-size:.82rem; margin-top:10px;">This creates a printable invoice and confirms your order goes to our bulk desk. Rates shown are indicative — final bulk rate is confirmed on call for large recurring orders.</p>
+  </section>
+
+  <section class="panel" style="margin-top:28px;">
+    <h2 style="font-size:.85rem; text-transform:uppercase; letter-spacing:.06em; color:var(--green-deep); margin:0 0 12px;">Recent Bulk Orders (this device)</h2>
+    <div id="recent-empty" class="muted">No bulk orders generated yet on this device.</div>
+    <div style="overflow-x:auto;">
+      <table class="recent" id="recent-table" style="display:none;">
+        <thead><tr><th>Invoice No.</th><th>Organisation</th><th>Type</th><th>Date</th><th>Total</th></tr></thead>
+        <tbody id="recent-tbody"></tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<!-- A4 invoice overlay -->
+<div id="invoice-overlay">
+  <div style="width:100%;">
+    <div class="inv-actions">
+      <button class="btn btn-primary" id="inv-print">🖨️ Print / Save as PDF</button>
+      <button class="btn btn-ghost" id="inv-close">Close</button>
+    </div>
+    <div class="inv-page" id="invoice-page"></div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-bottom" style="border-top:none; margin-top:0;">
+      <span>© <span data-year></span> FreshVegStore, VPO Asron. All rights reserved.</span>
+      <span>GSTIN: 03ABCFF1234K1Z5 (demo)</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/app.js"></script>
+<script>
+const GST_RATE = 5; // 2.5% CGST + 2.5% SGST — demo rate, adjust per actual HSN/GST slab
+const PRODUCT_HINTS = [
+  ["Potatoes","kg",22],["Onions","kg",27],["Tomatoes","kg",26],["Cauliflower","kg",26],
+  ["Cabbage","kg",18],["Carrots","kg",35],["Spinach / Saag","kg",18],["Green Peas","kg",55],
+  ["Garlic","kg",140],["Ginger","kg",110],["Capsicum","kg",45],["Cucumber","kg",22]
+];
+
+let itemRows = 0;
+const itemsList = document.getElementById('items-list');
+
+function addItemRow(prefill){
+  const id = 'item-' + (itemRows++);
+  const row = document.createElement('div');
+  row.className = 'item-row';
+  row.dataset.id = id;
+  row.innerHTML = `
+    <div class="field">
+      <label>Item</label>
+      <input list="product-hints" class="it-name" placeholder="e.g. Potatoes" value="${prefill ? prefill[0] : ''}">
+    </div>
+    <div class="field">
+      <label>Unit</label>
+      <select class="it-unit">
+        <option value="kg" ${!prefill||prefill[1]==='kg'?'selected':''}>kg</option>
+        <option value="quintal" ${prefill&&prefill[1]==='quintal'?'selected':''}>quintal</option>
+        <option value="bunch" ${prefill&&prefill[1]==='bunch'?'selected':''}>bunch</option>
+        <option value="crate" ${prefill&&prefill[1]==='crate'?'selected':''}>crate</option>
+      </select>
+    </div>
+    <div class="field"><label>Qty</label><input type="number" class="it-qty" min="0" step="0.5" value="${prefill?prefill[2]:1}"></div>
+    <div class="field"><label>Rate (₹)</label><input type="number" class="it-rate" min="0" step="0.5" value="${prefill?prefill[3]:0}"></div>
+    <div class="amt">₹0.00</div>
+    <button type="button" class="rm-item" title="Remove item">✕</button>`;
+  itemsList.appendChild(row);
+  row.querySelectorAll('.it-qty,.it-rate').forEach(inp => inp.addEventListener('input', updateBoTotals));
+  row.querySelector('.rm-item').addEventListener('click', () => { row.remove(); updateBoTotals(); });
+  updateBoTotals();
+}
+
+// product name datalist
+const dl = document.createElement('datalist');
+dl.id = 'product-hints';
+dl.innerHTML = PRODUCT_HINTS.map(p => `<option value="${p[0]}">`).join('');
+document.body.appendChild(dl);
+
+document.getElementById('add-item').addEventListener('click', () => addItemRow());
+
+function updateBoTotals(){
+  let subtotal = 0;
+  document.querySelectorAll('.item-row').forEach(row => {
+    const qty = parseFloat(row.querySelector('.it-qty').value) || 0;
+    const rate = parseFloat(row.querySelector('.it-rate').value) || 0;
+    const amt = qty * rate;
+    row.querySelector('.amt').textContent = FVS.money(amt);
+    subtotal += amt;
+  });
+  const cgst = subtotal * (GST_RATE/2/100);
+  const sgst = subtotal * (GST_RATE/2/100);
+  const grand = subtotal + cgst + sgst;
+  document.getElementById('bo-subtotal').textContent = FVS.money(subtotal);
+  document.getElementById('bo-cgst').textContent = FVS.money(cgst);
+  document.getElementById('bo-sgst').textContent = FVS.money(sgst);
+  document.getElementById('bo-grand').textContent = FVS.money(grand);
+  return { subtotal, cgst, sgst, grand };
+}
+
+// seed with 3 sample rows using hint data
+addItemRow(PRODUCT_HINTS[0]);
+addItemRow(PRODUCT_HINTS[1]);
+addItemRow(PRODUCT_HINTS[3]);
+
+function numberToWordsINR(num){
+  const a = ['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
+  const b = ['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
+  function two(n){ return n<20 ? a[n] : b[Math.floor(n/10)] + (n%10 ? ' '+a[n%10] : ''); }
+  function three(n){ return (n>=100 ? a[Math.floor(n/100)]+' Hundred '+two(n%100) : two(n)).trim(); }
+  let n = Math.floor(num);
+  if(n === 0) return 'Zero Rupees Only';
+  let str = '';
+  const crore = Math.floor(n/10000000); n%=10000000;
+  const lakh = Math.floor(n/100000); n%=100000;
+  const thousand = Math.floor(n/1000); n%=1000;
+  const hundred = n;
+  if(crore) str += three(crore)+' Crore ';
+  if(lakh) str += three(lakh)+' Lakh ';
+  if(thousand) str += three(thousand)+' Thousand ';
+  if(hundred) str += three(hundred);
+  return str.trim()+' Rupees Only';
+}
+
+/* ===================== GENERATE INVOICE ===================== */
+const invoiceOverlay = document.getElementById('invoice-overlay');
+const invoicePage = document.getElementById('invoice-page');
+
+document.getElementById('generate-invoice').addEventListener('click', () => {
+  const orgType = document.getElementById('org-type').value;
+  const orgName = document.getElementById('org-name').value.trim();
+  const contact = document.getElementById('org-contact').value.trim();
+  const phone = document.getElementById('org-phone').value.trim();
+  const address = document.getElementById('org-address').value.trim();
+  const gstin = document.getElementById('org-gstin').value.trim();
+  const delivDate = document.getElementById('org-date').value;
+  const notes = document.getElementById('org-notes').value.trim();
+
+  if(!orgName || !phone || !address){
+    alert('Please fill organisation name, phone and delivery address.');
+    return;
+  }
+  const items = [...document.querySelectorAll('.item-row')].map(row => ({
+    name: row.querySelector('.it-name').value.trim() || 'Item',
+    unit: row.querySelector('.it-unit').value,
+    qty: parseFloat(row.querySelector('.it-qty').value) || 0,
+    rate: parseFloat(row.querySelector('.it-rate').value) || 0
+  })).filter(it => it.qty > 0);
+
+  if(items.length === 0){ alert('Add at least one item with a quantity.'); return; }
+
+  const totals = updateBoTotals();
+  const invoiceNo = FVS.nextInvoiceNo();
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-IN');
+
+  const order = {
+    invoiceNo, date: dateStr, orgType, orgName, contact, phone, address, gstin, delivDate, notes,
+    items, ...totals
+  };
+  FVS.recordBulkOrder(order);
+  FVS.upsertCustomer({ name: orgName, phone, address, segment: 'bulk', orgType, gstin }, totals.grand);
+
+  renderInvoice(order);
+  renderRecent();
+  invoiceOverlay.classList.add('show');
+  window.scrollTo(0,0);
+});
+
+function renderInvoice(o){
+  let rows = '';
+  o.items.forEach((it,i) => {
+    rows += `<tr><td>${i+1}</td><td>${it.name}</td><td class="num">${it.qty} ${it.unit}</td><td class="num">₹${it.rate.toFixed(2)}</td><td class="num">₹${(it.qty*it.rate).toFixed(2)}</td></tr>`;
+  });
+  invoicePage.innerHTML = `
+    <div class="inv-top">
+      <div class="inv-brand">
+        <img src="../assets/logo.svg" alt="FreshVegStore">
+        <div>
+          <h1>${FVS.SHOP.name}</h1>
+          <p>${FVS.SHOP.addressLine1}, ${FVS.SHOP.addressLine2}<br>Ph: ${FVS.SHOP.phone} &nbsp;|&nbsp; GSTIN: ${FVS.SHOP.gstin}</p>
+        </div>
+      </div>
+      <div class="inv-meta">
+        <div class="doctitle">BULK ORDER INVOICE</div>
+        <table>
+          <tr><td class="k">Invoice No.</td><td>${o.invoiceNo}</td></tr>
+          <tr><td class="k">Date</td><td>${o.date}</td></tr>
+          ${o.delivDate ? `<tr><td class="k">Delivery Date</td><td>${new Date(o.delivDate).toLocaleDateString('en-IN')}</td></tr>` : ''}
+        </table>
+      </div>
+    </div>
+    <div class="inv-parties">
+      <div class="inv-box">
+        <h4>Billed To (${o.orgType})</h4>
+        <div class="name">${o.orgName}</div>
+        ${o.contact ? `<div class="line">Attn: ${o.contact}</div>` : ''}
+        <div class="line">${o.address}</div>
+        <div class="line">Ph: ${o.phone}</div>
+        ${o.gstin ? `<div class="line muted">GSTIN: ${o.gstin}</div>` : ''}
+      </div>
+      <div class="inv-box" style="text-align:right;">
+        <h4>Supplied By</h4>
+        <div class="name">${FVS.SHOP.name}</div>
+        <div class="line">${FVS.SHOP.addressLine1}</div>
+        <div class="line">${FVS.SHOP.addressLine2}</div>
+        <div class="line muted">GSTIN: ${FVS.SHOP.gstin}</div>
+      </div>
+    </div>
+    <table class="inv-table">
+      <thead><tr><th>#</th><th>Item</th><th class="num">Qty</th><th class="num">Rate</th><th class="num">Amount</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div class="inv-totals">
+      <table>
+        <tr><td class="k">Subtotal</td><td class="v">₹${o.subtotal.toFixed(2)}</td></tr>
+        <tr><td class="k">CGST (2.5%)</td><td class="v">₹${o.cgst.toFixed(2)}</td></tr>
+        <tr><td class="k">SGST (2.5%)</td><td class="v">₹${o.sgst.toFixed(2)}</td></tr>
+        <tr class="grand"><td class="k">Total</td><td class="v">₹${o.grand.toFixed(2)}</td></tr>
+      </table>
+    </div>
+    <div class="inv-words"><span class="k">Amount in words:</span> ${numberToWordsINR(o.grand)}</div>
+    ${o.notes ? `<div class="inv-words" style="margin-top:6px;"><span class="k">Notes:</span> ${o.notes}</div>` : ''}
+    <div class="inv-bottom">
+      <div class="inv-terms">
+        <h4>Terms</h4>
+        Rate quoted is fixed for this order only; standing bulk rates are re-confirmed periodically.
+        Payment due within 7 days of delivery unless otherwise agreed. This is a computer-generated invoice.
+      </div>
+      <div class="inv-sign"><div class="box">Authorised Signatory</div></div>
+    </div>
+    <div class="inv-footer-strip">
+      <span>${FVS.SHOP.name} · ${FVS.SHOP.addressLine1}</span>
+      <span>Ph: ${FVS.SHOP.phone} · ${FVS.SHOP.email}</span>
+    </div>`;
+}
+
+document.getElementById('inv-close').addEventListener('click', () => invoiceOverlay.classList.remove('show'));
+document.getElementById('inv-print').addEventListener('click', () => window.print());
+
+/* ===================== RECENT ORDERS ===================== */
+function renderRecent(){
+  const list = FVS.getBulkOrders();
+  const table = document.getElementById('recent-table');
+  const empty = document.getElementById('recent-empty');
+  if(list.length === 0){ table.style.display = 'none'; empty.style.display = 'block'; return; }
+  table.style.display = 'table'; empty.style.display = 'none';
+  document.getElementById('recent-tbody').innerHTML = list.slice(0,10).map(o => `
+    <tr><td>${o.invoiceNo}</td><td>${o.orgName}</td><td>${o.orgType}</td><td>${o.date}</td><td>${FVS.money(o.grand)}</td></tr>
+  `).join('');
+}
+renderRecent();
+</script>
+</body>
+</html>
